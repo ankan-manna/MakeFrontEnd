@@ -1,10 +1,26 @@
 import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
-import { Calendar, Activity, FileText, AlertTriangle } from 'lucide-react'
+import { Calendar, Activity, FileText, AlertTriangle, TrendingUp, Shield } from 'lucide-react'
 import { Card, CardHeader } from '../../components/ui/Card'
 import { Badge } from '../../components/ui/Badge'
 import { Loader } from '../../components/ui/Loader'
 import { patientApi } from '../../api/services'
+
+function MetricCard({ icon: Icon, label, value, accent, bgAccent }) {
+  return (
+    <Card>
+      <div className="flex items-center gap-4">
+        <div className={`p-3 rounded-xl ${bgAccent}`}>
+          <Icon className={`w-5 h-5 ${accent}`} />
+        </div>
+        <div className="min-w-0">
+          <p className="text-sm text-neutral-500 truncate">{label}</p>
+          <p className="text-2xl font-bold text-neutral-900 mt-0.5">{value}</p>
+        </div>
+      </div>
+    </Card>
+  )
+}
 
 export function PatientDashboard() {
   const [data, setData] = useState(null)
@@ -27,75 +43,67 @@ export function PatientDashboard() {
   }, [])
 
   if (loading) return <Loader size="lg" className="min-h-[40vh]" />
-  if (!data) return <p className="text-gray-500">No data</p>
+  if (!data) return <p className="text-neutral-500">No data</p>
 
   const riskScores = data.riskScores || {}
   const recentTimeline = data.recentTimeline || []
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+    <div className="flex flex-col gap-6">
+      <div>
+        <h1 className="text-2xl font-bold text-neutral-900">Dashboard</h1>
+        <p className="text-sm text-neutral-500 mt-1">Your health overview at a glance</p>
+      </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-primary-50">
-              <Activity className="w-6 h-6 text-primary-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Risk score (Diabetes)</p>
-              <p className="text-xl font-semibold">{((riskScores.DIABETES ?? 0) * 100).toFixed(0)}%</p>
-            </div>
-          </div>
-        </Card>
-        <Card>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-amber-50">
-              <AlertTriangle className="w-6 h-6 text-amber-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Risk score (Heart)</p>
-              <p className="text-xl font-semibold">{((riskScores.HEART ?? 0) * 100).toFixed(0)}%</p>
-            </div>
-          </div>
-        </Card>
-        <Card>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-red-50">
-              <Activity className="w-6 h-6 text-red-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Risk score (Hypertension)</p>
-              <p className="text-xl font-semibold">{((riskScores.HYPERTENSION ?? 0) * 100).toFixed(0)}%</p>
-            </div>
-          </div>
-        </Card>
-        <Card>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-green-50">
-              <FileText className="w-6 h-6 text-green-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Timeline events</p>
-              <p className="text-xl font-semibold">{recentTimeline.length}</p>
-            </div>
-          </div>
-        </Card>
+        <MetricCard
+          icon={Activity}
+          label="Diabetes risk"
+          value={`${((riskScores.DIABETES ?? 0) * 100).toFixed(0)}%`}
+          accent="text-primary-600"
+          bgAccent="bg-primary-50"
+        />
+        <MetricCard
+          icon={AlertTriangle}
+          label="Heart risk"
+          value={`${((riskScores.HEART ?? 0) * 100).toFixed(0)}%`}
+          accent="text-amber-600"
+          bgAccent="bg-amber-50"
+        />
+        <MetricCard
+          icon={TrendingUp}
+          label="Hypertension risk"
+          value={`${((riskScores.HYPERTENSION ?? 0) * 100).toFixed(0)}%`}
+          accent="text-red-500"
+          bgAccent="bg-red-50"
+        />
+        <MetricCard
+          icon={FileText}
+          label="Timeline events"
+          value={recentTimeline.length}
+          accent="text-emerald-600"
+          bgAccent="bg-emerald-50"
+        />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
         <Card>
-          <CardHeader title="Recent health timeline" />
+          <CardHeader title="Recent health timeline" subtitle="Latest appointments and lab results" />
           {recentTimeline.length === 0 ? (
-            <p className="text-gray-500 text-sm">No recent events. Appointments and lab reports will appear here.</p>
+            <div className="py-8 text-center">
+              <Calendar className="w-10 h-10 text-neutral-200 mx-auto mb-3" />
+              <p className="text-neutral-500 text-sm">No recent events. Appointments and lab reports will appear here.</p>
+            </div>
           ) : (
-            <ul className="space-y-3">
+            <ul className="flex flex-col gap-3">
               {recentTimeline.slice(0, 5).map((e) => (
-                <li key={e.id} className="flex items-center gap-3 py-2 border-b border-gray-100 last:border-0">
-                  <Calendar className="w-4 h-4 text-gray-400 shrink-0" />
-                  <div>
-                    <p className="font-medium text-sm">{e.title || e.eventType}</p>
-                    <p className="text-xs text-gray-500">{e.eventDate ? new Date(e.eventDate).toLocaleDateString() : ''}</p>
+                <li key={e.id} className="flex items-center gap-3 p-3 rounded-xl bg-neutral-50 border border-neutral-100">
+                  <div className="w-9 h-9 rounded-lg bg-primary-50 flex items-center justify-center shrink-0">
+                    <Calendar className="w-4 h-4 text-primary-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm text-neutral-900 truncate">{e.title || e.eventType}</p>
+                    <p className="text-xs text-neutral-400">{e.eventDate ? new Date(e.eventDate).toLocaleDateString() : ''}</p>
                   </div>
                   <Badge variant="primary">{e.eventType}</Badge>
                 </li>
@@ -104,15 +112,18 @@ export function PatientDashboard() {
           )}
         </Card>
         <Card>
-          <CardHeader title="Active consents" />
+          <CardHeader title="Active consents" subtitle="Data access permissions you have granted" />
           {(data.activeConsents || []).length === 0 ? (
-            <p className="text-gray-500 text-sm">No active consents. Grant access to doctors or labs from Profile.</p>
+            <div className="py-8 text-center">
+              <Shield className="w-10 h-10 text-neutral-200 mx-auto mb-3" />
+              <p className="text-neutral-500 text-sm">No active consents. Grant access to doctors or labs from Profile.</p>
+            </div>
           ) : (
-            <ul className="space-y-2">
+            <ul className="flex flex-col gap-2">
               {data.activeConsents.map((c) => (
-                <li key={c.id} className="text-sm">
-                  <Badge className="mr-2">{c.consentType}</Badge>
-                  Granted to ID: {c.grantedToId}
+                <li key={c.id} className="flex items-center gap-3 p-3 rounded-xl bg-neutral-50 border border-neutral-100">
+                  <Badge variant="info" className="mr-2">{c.consentType}</Badge>
+                  <span className="text-sm text-neutral-600">Granted to ID: {c.grantedToId}</span>
                 </li>
               ))}
             </ul>

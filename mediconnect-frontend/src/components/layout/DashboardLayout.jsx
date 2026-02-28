@@ -15,9 +15,11 @@ import {
   X,
   Bell,
   LogOut,
+  Stethoscope,
+  ChevronRight,
+  Search,
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
-import { Button } from '../ui/Button'
 import { ROLES, ROLE_LABELS } from '../../constants'
 
 const patientNav = [
@@ -68,6 +70,25 @@ function getNav(role) {
   return []
 }
 
+function NavItem({ item, active, onClick }) {
+  const Icon = item.icon
+  return (
+    <Link
+      to={item.to}
+      onClick={onClick}
+      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-smooth group ${
+        active
+          ? 'bg-primary-50 text-primary-700 shadow-sm'
+          : 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100'
+      }`}
+    >
+      <Icon className={`w-[18px] h-[18px] shrink-0 transition-smooth ${active ? 'text-primary-600' : 'text-neutral-400 group-hover:text-neutral-600'}`} />
+      <span className="flex-1">{item.label}</span>
+      {active && <ChevronRight className="w-4 h-4 text-primary-400" />}
+    </Link>
+  )
+}
+
 export function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
@@ -76,115 +97,146 @@ export function DashboardLayout() {
   const role = user?.roles?.[0]
   const navItems = getNav(role)
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar - desktop */}
-      <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-gray-200 fixed inset-y-0 left-0 z-30">
-        <div className="p-4 border-b border-gray-100">
-          <Link to="/" className="flex items-center gap-2 text-primary-600 font-semibold text-lg">
-            <LayoutDashboard className="w-6 h-6" />
-            MediConnect
-          </Link>
+  const sidebarContent = (
+    <>
+      {/* Logo */}
+      <div className="px-5 py-5 border-b border-neutral-100">
+        <Link to="/" className="flex items-center gap-2.5 text-neutral-900 font-bold text-base group">
+          <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center group-hover:bg-primary-700 transition-smooth">
+            <Stethoscope className="w-5 h-5 text-white" />
+          </div>
+          MediConnect
+        </Link>
+      </div>
+
+      {/* Role badge */}
+      <div className="px-4 pt-4 pb-2">
+        <div className="px-3 py-2 rounded-xl bg-neutral-50 border border-neutral-100">
+          <p className="text-xs font-medium text-neutral-400 uppercase tracking-wider">Logged in as</p>
+          <p className="text-sm font-semibold text-neutral-700 mt-0.5">{ROLE_LABELS[role]}</p>
         </div>
-        <nav className="flex-1 overflow-y-auto p-2">
-          {navItems.map((item) => {
-            const Icon = item.icon
-            const active = location.pathname === item.to
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-soft ${
-                  active ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-50'
-                }`}
-              >
-                <Icon className="w-5 h-5 shrink-0" />
-                {item.label}
-              </Link>
-            )
-          })}
-        </nav>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 overflow-y-auto px-3 py-2 flex flex-col gap-0.5">
+        {navItems.map((item) => (
+          <NavItem
+            key={item.to}
+            item={item}
+            active={location.pathname === item.to}
+            onClick={() => setSidebarOpen(false)}
+          />
+        ))}
+      </nav>
+
+      {/* Logout */}
+      <div className="px-3 py-4 border-t border-neutral-100">
+        <button
+          onClick={() => { logout(); setSidebarOpen(false) }}
+          className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 hover:text-red-600 transition-smooth"
+        >
+          <LogOut className="w-[18px] h-[18px]" />
+          Sign out
+        </button>
+      </div>
+    </>
+  )
+
+  return (
+    <div className="min-h-screen bg-neutral-50 flex">
+      {/* Sidebar - desktop */}
+      <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-neutral-200/80 fixed inset-y-0 left-0 z-30">
+        {sidebarContent}
       </aside>
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-neutral-950/30 backdrop-blur-sm z-40 lg:hidden animate-fade-in"
           onClick={() => setSidebarOpen(false)}
           aria-hidden="true"
         />
       )}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-white border-r transform transition-transform lg:hidden ${
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-neutral-200/80 flex flex-col transform transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] lg:hidden ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="p-4 flex justify-between items-center border-b">
-          <span className="font-semibold text-primary-600">Menu</span>
-          <button onClick={() => setSidebarOpen(false)} className="p-2">
-            <X className="w-5 h-5" />
+        <div className="absolute right-3 top-3">
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="p-2 rounded-xl hover:bg-neutral-100 transition-soft"
+            aria-label="Close sidebar"
+          >
+            <X className="w-5 h-5 text-neutral-500" />
           </button>
         </div>
-        <nav className="p-2">
-          {navItems.map((item) => {
-            const Icon = item.icon
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                onClick={() => setSidebarOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
-                <Icon className="w-5 h-5" />
-                {item.label}
-              </Link>
-            )
-          })}
-        </nav>
+        {sidebarContent}
       </aside>
 
-      <div className="flex-1 lg:pl-64">
+      <div className="flex-1 lg:pl-64 flex flex-col min-h-screen">
         {/* Top bar */}
-        <header className="sticky top-0 z-20 bg-white border-b border-gray-200 h-14 flex items-center justify-between px-4">
-          <button
-            type="button"
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
-            onClick={() => setSidebarOpen(true)}
-            aria-label="Open menu"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-          <div className="flex-1" />
-          <div className="flex items-center gap-2">
-            <button className="p-2 rounded-lg hover:bg-gray-100 relative" aria-label="Notifications">
-              <Bell className="w-5 h-5 text-gray-600" />
+        <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-neutral-200/60 h-16 flex items-center justify-between px-4 sm:px-6">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              className="lg:hidden p-2 rounded-xl hover:bg-neutral-100 transition-soft"
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Open menu"
+            >
+              <Menu className="w-5 h-5 text-neutral-600" />
             </button>
+            {/* Search (visual only) */}
+            <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl bg-neutral-100/80 text-neutral-400 text-sm min-w-[240px]">
+              <Search className="w-4 h-4" />
+              <span>Search...</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              className="p-2.5 rounded-xl hover:bg-neutral-100 transition-soft relative"
+              aria-label="Notifications"
+            >
+              <Bell className="w-5 h-5 text-neutral-500" />
+              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary-500" />
+            </button>
+
             <div className="relative">
               <button
                 onClick={() => setProfileOpen((o) => !o)}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-100"
+                className="flex items-center gap-3 pl-3 pr-2 py-2 rounded-xl hover:bg-neutral-100 transition-soft"
               >
-                <span className="text-sm font-medium text-gray-700">{user?.email}</span>
-                <span className="text-xs text-gray-500">({ROLE_LABELS[role]})</span>
+                <div className="w-8 h-8 rounded-xl bg-primary-100 flex items-center justify-center">
+                  <span className="text-sm font-bold text-primary-700">
+                    {(user?.email?.[0] || 'U').toUpperCase()}
+                  </span>
+                </div>
+                <div className="hidden sm:block text-left">
+                  <p className="text-sm font-medium text-neutral-700 leading-tight">{user?.email}</p>
+                  <p className="text-xs text-neutral-400">{ROLE_LABELS[role]}</p>
+                </div>
               </button>
+
               {profileOpen && (
                 <>
                   <div className="fixed inset-0 z-10" onClick={() => setProfileOpen(false)} />
-                  <div className="absolute right-0 mt-1 w-48 py-1 bg-white rounded-xl shadow-lg border z-20">
+                  <div className="absolute right-0 mt-2 w-52 py-1.5 bg-white rounded-xl shadow-elevated border border-neutral-200/80 z-20 animate-slide-up">
                     <Link
                       to={role === ROLES.PATIENT ? '/patient/profile' : role === ROLES.DOCTOR ? '/doctor/profile' : '#'}
-                      className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-soft"
                       onClick={() => setProfileOpen(false)}
                     >
-                      <User className="w-4 h-4" />
+                      <User className="w-4 h-4 text-neutral-400" />
                       Profile
                     </Link>
+                    <div className="mx-3 my-1 border-t border-neutral-100" />
                     <button
-                      onClick={() => { logout(); setProfileOpen(false); }}
-                      className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                      onClick={() => { logout(); setProfileOpen(false) }}
+                      className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-soft"
                     >
                       <LogOut className="w-4 h-4" />
-                      Logout
+                      Sign out
                     </button>
                   </div>
                 </>
@@ -193,7 +245,7 @@ export function DashboardLayout() {
           </div>
         </header>
 
-        <main className="p-4 sm:p-6">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>

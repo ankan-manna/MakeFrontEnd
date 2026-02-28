@@ -2,14 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 @layer base {
+  *,
+  *::before,
+  *::after {
+    @apply border-neutral-200;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    @apply bg-neutral-50 text-neutral-900 antialiased font-sans;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight text-balance;
+  }
+
+  ::selection {
+    @apply bg-primary-100 text-primary-900;
   }
 }
 
 @layer components {
   .transition-soft {
     @apply transition-all duration-200 ease-in-out;
+  }
+
+  .transition-smooth {
+    @apply transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)];
+  }
+
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-xl border border-neutral-200/60;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-[linear-gradient(135deg,#3366ff_0%,#06c4af_100%)];
+  }
+
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:ring-offset-2 focus:ring-offset-white;
+  }
+
+  .hover-lift {
+    @apply hover:-translate-y-0.5 hover:shadow-elevated transition-smooth;
   }
 }

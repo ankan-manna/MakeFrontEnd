@@ -1,7 +1,9 @@
-export function Card({ children, className = '', padding = true, ...props }) {
+export function Card({ children, className = '', padding = true, hover = true, ...props }) {
   return (
     <div
-      className={`bg-white rounded-xl shadow-md overflow-hidden transition-soft hover:shadow-soft ${padding ? 'p-6' : ''} ${className}`}
+      className={`bg-white rounded-2xl border border-neutral-200/80 shadow-soft overflow-hidden transition-smooth ${
+        hover ? 'hover:shadow-card hover:border-neutral-300/80' : ''
+      } ${padding ? 'p-6' : ''} ${className}`}
       {...props}
     >
       {children}
@@ -9,10 +11,13 @@ export function Card({ children, className = '', padding = true, ...props }) {
   )
 }
 
-export function CardHeader({ title, action, className = '' }) {
+export function CardHeader({ title, subtitle, action, className = '' }) {
   return (
-    <div className={`flex items-center justify-between mb-4 ${className}`}>
-      <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+    <div className={`flex items-start justify-between mb-5 ${className}`}>
+      <div>
+        <h3 className="text-lg font-semibold text-neutral-900">{title}</h3>
+        {subtitle && <p className="mt-0.5 text-sm text-neutral-500">{subtitle}</p>}
+      </div>
       {action}
     </div>
   )

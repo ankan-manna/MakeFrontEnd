@@ -1,14 +1,15 @@
 export function Badge({ children, variant = 'default', className = '' }) {
   const variants = {
-    default: 'bg-gray-100 text-gray-800',
-    primary: 'bg-primary-100 text-primary-800',
-    success: 'bg-green-100 text-green-800',
-    warning: 'bg-amber-100 text-amber-800',
-    danger: 'bg-red-100 text-red-800',
+    default: 'bg-neutral-100 text-neutral-700 border-neutral-200',
+    primary: 'bg-primary-50 text-primary-700 border-primary-200',
+    success: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    warning: 'bg-amber-50 text-amber-700 border-amber-200',
+    danger: 'bg-red-50 text-red-700 border-red-200',
+    info: 'bg-sky-50 text-sky-700 border-sky-200',
   }
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${variants[variant]} ${className}`}
+      className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold border ${variants[variant]} ${className}`}
     >
       {children}
     </span>
