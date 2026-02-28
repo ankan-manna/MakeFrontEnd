@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import { ArrowLeft } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Card } from '../../components/ui/Card'
@@ -43,18 +44,31 @@ export function PatientBookAppointment() {
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Book appointment</h1>
-      <p className="text-gray-600">Backend: GET /api/doctors/me/slots returns doctor slots. Use a known doctor profile ID and slot ID from the doctor service.</p>
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => navigate(-1)}
+          className="p-2 rounded-xl hover:bg-neutral-100 transition-soft"
+          aria-label="Go back"
+        >
+          <ArrowLeft className="w-5 h-5 text-neutral-500" />
+        </button>
+        <div>
+          <h1 className="text-2xl font-bold text-neutral-900">Book appointment</h1>
+          <p className="text-sm text-neutral-500 mt-0.5">Use a known doctor profile ID and slot ID</p>
+        </div>
+      </div>
       <Card>
-        <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md">
           <Input label="Doctor profile ID" type="number" value={doctorProfileId} onChange={(e) => setDoctorProfileId(e.target.value)} required />
           <Input label="Slot ID" type="number" value={slotId} onChange={(e) => setSlotId(e.target.value)} required />
-          <Input label="Slot date (YYYY-MM-DD)" type="date" value={slotDate} onChange={(e) => setSlotDate(e.target.value)} required />
-          <Input label="Start time (HH:mm)" type="time" value={slotStartTime} onChange={(e) => setSlotStartTime(e.target.value)} />
-          <Input label="End time (HH:mm)" type="time" value={slotEndTime} onChange={(e) => setSlotEndTime(e.target.value)} />
-          <Input label="Reason (optional)" value={reason} onChange={(e) => setReason(e.target.value)} />
-          <Button type="submit" disabled={loading}>{loading ? 'Booking...' : 'Book'}</Button>
+          <Input label="Slot date" type="date" value={slotDate} onChange={(e) => setSlotDate(e.target.value)} required />
+          <div className="grid grid-cols-2 gap-4">
+            <Input label="Start time" type="time" value={slotStartTime} onChange={(e) => setSlotStartTime(e.target.value)} />
+            <Input label="End time" type="time" value={slotEndTime} onChange={(e) => setSlotEndTime(e.target.value)} />
+          </div>
+          <Input label="Reason (optional)" value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Brief description..." />
+          <Button type="submit" disabled={loading} className="mt-2">{loading ? 'Booking...' : 'Book appointment'}</Button>
         </form>
       </Card>
     </div>

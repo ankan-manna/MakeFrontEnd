@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
+import { Plus, Package } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
-import { Card } from '../../components/ui/Card'
+import { Card, CardHeader } from '../../components/ui/Card'
 import { Loader } from '../../components/ui/Loader'
 import { pharmacyApi } from '../../api/services'
 
@@ -45,43 +46,56 @@ export function PharmacistInventory() {
   if (loading) return <Loader size="lg" className="min-h-[40vh]" />
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Inventory</h1>
+    <div className="flex flex-col gap-6">
+      <div>
+        <h1 className="text-2xl font-bold text-neutral-900">Inventory</h1>
+        <p className="text-sm text-neutral-500 mt-1">Manage your pharmacy stock</p>
+      </div>
+
       <Card>
-        <h3 className="font-semibold mb-4">Add item</h3>
-        <form onSubmit={handleAdd} className="flex flex-wrap gap-4 items-end max-w-3xl">
+        <CardHeader title="Add new item" subtitle="Add medicine to your inventory" />
+        <form onSubmit={handleAdd} className="flex flex-wrap gap-4 items-end">
           <Input label="SKU" value={form.medicineSku} onChange={(e) => setForm((f) => ({ ...f, medicineSku: e.target.value }))} required />
           <Input label="Name" value={form.medicineName} onChange={(e) => setForm((f) => ({ ...f, medicineName: e.target.value }))} />
           <Input label="Quantity" type="number" value={form.quantity} onChange={(e) => setForm((f) => ({ ...f, quantity: e.target.value }))} />
           <Input label="Unit" value={form.unit} onChange={(e) => setForm((f) => ({ ...f, unit: e.target.value }))} />
           <Input label="Price/unit" type="number" step="0.01" value={form.pricePerUnit} onChange={(e) => setForm((f) => ({ ...f, pricePerUnit: e.target.value }))} />
-          <Button type="submit" disabled={adding}>{adding ? 'Adding...' : 'Add'}</Button>
+          <Button type="submit" disabled={adding}>
+            <Plus className="w-4 h-4" />
+            {adding ? 'Adding...' : 'Add'}
+          </Button>
         </form>
       </Card>
+
       <Card>
-        <h3 className="font-semibold mb-4">Current inventory</h3>
+        <CardHeader title="Current inventory" subtitle={`${list.length} items in stock`} />
         {list.length === 0 ? (
-          <p className="text-gray-500">No items. Add above.</p>
+          <div className="py-12 text-center">
+            <div className="w-12 h-12 rounded-2xl bg-neutral-100 flex items-center justify-center mx-auto mb-3">
+              <Package className="w-6 h-6 text-neutral-300" />
+            </div>
+            <p className="text-sm text-neutral-500">No items yet. Add your first item above.</p>
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="text-left py-2">SKU</th>
-                  <th className="text-left py-2">Name</th>
-                  <th className="text-left py-2">Qty</th>
-                  <th className="text-left py-2">Unit</th>
-                  <th className="text-left py-2">Price</th>
+                <tr className="border-b border-neutral-200">
+                  <th className="text-left py-3 px-3 text-xs font-semibold text-neutral-500 uppercase tracking-wider">SKU</th>
+                  <th className="text-left py-3 px-3 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Name</th>
+                  <th className="text-left py-3 px-3 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Qty</th>
+                  <th className="text-left py-3 px-3 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Unit</th>
+                  <th className="text-left py-3 px-3 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Price</th>
                 </tr>
               </thead>
               <tbody>
                 {list.map((i) => (
-                  <tr key={i.id} className="border-b border-gray-100">
-                    <td className="py-2">{i.medicineSku}</td>
-                    <td className="py-2">{i.medicineName}</td>
-                    <td className="py-2">{i.quantity}</td>
-                    <td className="py-2">{i.unit}</td>
-                    <td className="py-2">{i.pricePerUnit}</td>
+                  <tr key={i.id} className="border-b border-neutral-100 hover:bg-neutral-50 transition-soft">
+                    <td className="py-3 px-3 font-medium text-neutral-900">{i.medicineSku}</td>
+                    <td className="py-3 px-3 text-neutral-600">{i.medicineName}</td>
+                    <td className="py-3 px-3 text-neutral-600">{i.quantity}</td>
+                    <td className="py-3 px-3 text-neutral-600">{i.unit}</td>
+                    <td className="py-3 px-3 text-neutral-600">{i.pricePerUnit}</td>
                   </tr>
                 ))}
               </tbody>

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { Calendar, Plus } from 'lucide-react'
-import { Card, CardHeader } from '../../components/ui/Card'
+import { Card } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { Badge } from '../../components/ui/Badge'
 import { Loader } from '../../components/ui/Loader'
@@ -35,12 +35,15 @@ export function PatientAppointments() {
   if (loading) return <Loader size="lg" className="min-h-[40vh]" />
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold text-gray-900">Appointments</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-neutral-900">Appointments</h1>
+          <p className="text-sm text-neutral-500 mt-1">Manage your upcoming and past appointments</p>
+        </div>
         <Link to="/patient/book-appointment">
           <Button>
-            <Plus className="w-4 h-4 mr-2 inline" />
+            <Plus className="w-4 h-4" />
             Book appointment
           </Button>
         </Link>
@@ -48,20 +51,28 @@ export function PatientAppointments() {
 
       <Card>
         {list.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
-            <Calendar className="w-12 h-12 mx-auto text-gray-300 mb-3" />
-            <p>No appointments yet. Book one from the doctor search.</p>
+          <div className="text-center py-16">
+            <div className="w-16 h-16 rounded-2xl bg-neutral-100 flex items-center justify-center mx-auto mb-4">
+              <Calendar className="w-8 h-8 text-neutral-300" />
+            </div>
+            <p className="font-medium text-neutral-700 mb-1">No appointments yet</p>
+            <p className="text-sm text-neutral-400">Book your first appointment from the doctor search.</p>
           </div>
         ) : (
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-neutral-100">
             {list.map((a) => (
-              <li key={a.id} className="py-4 flex flex-wrap items-center justify-between gap-2">
-                <div>
-                  <p className="font-medium">Doctor profile #{a.doctorProfileId}</p>
-                  <p className="text-sm text-gray-500">
-                    {a.slotDate} {a.slotStartTime} – {a.slotEndTime}
-                    {a.reason && ` · ${a.reason}`}
-                  </p>
+              <li key={a.id} className="py-4 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center shrink-0">
+                    <Calendar className="w-5 h-5 text-primary-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm text-neutral-900">Doctor profile #{a.doctorProfileId}</p>
+                    <p className="text-sm text-neutral-500">
+                      {a.slotDate} {a.slotStartTime} - {a.slotEndTime}
+                      {a.reason && ` \u00B7 ${a.reason}`}
+                    </p>
+                  </div>
                 </div>
                 <Badge variant={STATUS_VARIANTS[a.status] || 'default'}>{a.status}</Badge>
               </li>

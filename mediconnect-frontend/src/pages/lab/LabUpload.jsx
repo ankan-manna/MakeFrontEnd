@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import toast from 'react-hot-toast'
+import { Upload } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
-import { Card } from '../../components/ui/Card'
+import { Card, CardHeader } from '../../components/ui/Card'
 import { labApi } from '../../api/services'
 
 export function LabUpload() {
@@ -15,7 +16,7 @@ export function LabUpload() {
     reportUrl: '',
     values: [
       { parameterName: 'Hb', value: '14', unit: 'g/dL', referenceRange: '12-16', abnormal: false },
-      { parameterName: 'WBC', value: '12000', unit: '/µL', referenceRange: '4000-11000', abnormal: true },
+      { parameterName: 'WBC', value: '12000', unit: '/\u00B5L', referenceRange: '4000-11000', abnormal: true },
     ],
   })
 
@@ -37,17 +38,33 @@ export function LabUpload() {
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Upload report</h1>
+    <div className="flex flex-col gap-6">
+      <div>
+        <h1 className="text-2xl font-bold text-neutral-900">Upload Report</h1>
+        <p className="text-sm text-neutral-500 mt-1">Upload lab test results for patients</p>
+      </div>
+
       <Card>
-        <form onSubmit={handleSubmit} className="space-y-4 max-w-lg">
-          <Input label="Patient user ID" type="number" value={body.patientUserId} onChange={(e) => setBody((b) => ({ ...b, patientUserId: e.target.value }))} />
-          <Input label="Booking ID" type="number" value={body.bookingId} onChange={(e) => setBody((b) => ({ ...b, bookingId: e.target.value }))} />
-          <Input label="Test name" value={body.testName} onChange={(e) => setBody((b) => ({ ...b, testName: e.target.value }))} />
-          <Input label="Test code" value={body.testCode} onChange={(e) => setBody((b) => ({ ...b, testCode: e.target.value }))} />
-          <Input label="Report URL" value={body.reportUrl} onChange={(e) => setBody((b) => ({ ...b, reportUrl: e.target.value }))} placeholder="Optional" />
-          <p className="text-sm text-gray-500">Values (abnormal flag triggers highlight): pre-filled sample. Backend detects abnormal and publishes event.</p>
-          <Button type="submit" disabled={loading}>{loading ? 'Uploading...' : 'Upload report'}</Button>
+        <CardHeader title="Report details" subtitle="Enter the test results and patient information" />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-lg">
+          <div className="grid grid-cols-2 gap-4">
+            <Input label="Patient user ID" type="number" value={body.patientUserId} onChange={(e) => setBody((b) => ({ ...b, patientUserId: e.target.value }))} />
+            <Input label="Booking ID" type="number" value={body.bookingId} onChange={(e) => setBody((b) => ({ ...b, bookingId: e.target.value }))} />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Input label="Test name" value={body.testName} onChange={(e) => setBody((b) => ({ ...b, testName: e.target.value }))} />
+            <Input label="Test code" value={body.testCode} onChange={(e) => setBody((b) => ({ ...b, testCode: e.target.value }))} />
+          </div>
+          <Input label="Report URL (optional)" value={body.reportUrl} onChange={(e) => setBody((b) => ({ ...b, reportUrl: e.target.value }))} placeholder="https://..." />
+
+          <div className="p-4 rounded-xl bg-amber-50 border border-amber-200">
+            <p className="text-sm text-amber-700">Sample values are pre-filled (Hb, WBC). Abnormal values trigger alerts in the system.</p>
+          </div>
+
+          <Button type="submit" disabled={loading} className="self-start">
+            <Upload className="w-4 h-4" />
+            {loading ? 'Uploading...' : 'Upload report'}
+          </Button>
         </form>
       </Card>
     </div>

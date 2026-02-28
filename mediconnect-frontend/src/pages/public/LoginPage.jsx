@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import { Stethoscope, Lock, Mail, Smartphone } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 
 export function LoginPage() {
-  const [mode, setMode] = useState('password') // 'password' | 'otp'
+  const [mode, setMode] = useState('password')
   const [emailOrPhone, setEmailOrPhone] = useState('')
   const [password, setPassword] = useState('')
   const [otp, setOtp] = useState('')
@@ -72,88 +73,107 @@ export function LoginPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto py-12 px-4">
-      <div className="bg-white rounded-2xl shadow-md p-8">
-        <h1 className="text-2xl font-bold text-gray-900">Sign in</h1>
-        <p className="mt-1 text-sm text-gray-600">Use your email or phone to continue.</p>
-
-        <div className="flex rounded-xl bg-gray-100 p-1 mt-6">
-          <button
-            type="button"
-            onClick={() => setMode('password')}
-            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-soft ${mode === 'password' ? 'bg-white shadow text-primary-600' : 'text-gray-600'}`}
-          >
-            Password
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode('otp')}
-            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-soft ${mode === 'otp' ? 'bg-white shadow text-primary-600' : 'text-gray-600'}`}
-          >
-            OTP
-          </button>
+    <div className="flex-1 flex items-center justify-center py-12 px-4 bg-neutral-50">
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-primary-600 mb-4">
+            <Stethoscope className="w-6 h-6 text-white" />
+          </div>
+          <h1 className="text-2xl font-bold text-neutral-900">Welcome back</h1>
+          <p className="mt-2 text-sm text-neutral-500">Sign in to continue to MediConnect</p>
         </div>
 
-        {mode === 'password' ? (
-          <form onSubmit={handlePasswordLogin} className="mt-6 space-y-4">
-            <Input
-              label="Email or phone"
-              type="text"
-              value={emailOrPhone}
-              onChange={(e) => setEmailOrPhone(e.target.value)}
-              placeholder="you@example.com or +91..."
-              required
-            />
-            <Input
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-            />
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign in'}
-            </Button>
-          </form>
-        ) : (
-          <div className="mt-6 space-y-4">
-            <Input
-              label="Email or phone"
-              type="text"
-              value={emailOrPhone}
-              onChange={(e) => setEmailOrPhone(e.target.value)}
-              placeholder="you@example.com or +91..."
-              disabled={otpSent}
-            />
-            {!otpSent ? (
-              <Button onClick={handleSendOtp} className="w-full" disabled={loading}>
-                {loading ? 'Sending...' : 'Send OTP'}
-              </Button>
-            ) : (
-              <form onSubmit={handleOtpLogin} className="space-y-4">
-                <Input
-                  label="OTP"
-                  type="text"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  placeholder="Enter 6-digit OTP"
-                />
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? 'Verifying...' : 'Verify & sign in'}
-                </Button>
-                <button type="button" onClick={() => setOtpSent(false)} className="text-sm text-primary-600 hover:underline">
-                  Use different number
-                </button>
-              </form>
-            )}
+        <div className="bg-white rounded-2xl border border-neutral-200/80 shadow-card p-8">
+          {/* Tab switcher */}
+          <div className="flex rounded-xl bg-neutral-100 p-1 mb-6">
+            <button
+              type="button"
+              onClick={() => setMode('password')}
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-semibold rounded-lg transition-smooth ${
+                mode === 'password' ? 'bg-white shadow-sm text-neutral-900' : 'text-neutral-500 hover:text-neutral-700'
+              }`}
+            >
+              <Lock className="w-4 h-4" />
+              Password
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('otp')}
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-semibold rounded-lg transition-smooth ${
+                mode === 'otp' ? 'bg-white shadow-sm text-neutral-900' : 'text-neutral-500 hover:text-neutral-700'
+              }`}
+            >
+              <Smartphone className="w-4 h-4" />
+              OTP
+            </button>
           </div>
-        )}
 
-        <p className="mt-6 text-center text-sm text-gray-600">
-          Don&apos;t have an account?{' '}
-          <Link to="/register" className="font-medium text-primary-600 hover:underline">
-            Register
+          {mode === 'password' ? (
+            <form onSubmit={handlePasswordLogin} className="flex flex-col gap-4">
+              <Input
+                label="Email or phone"
+                type="text"
+                value={emailOrPhone}
+                onChange={(e) => setEmailOrPhone(e.target.value)}
+                placeholder="you@example.com"
+                required
+              />
+              <Input
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+              />
+              <Button type="submit" className="w-full mt-2" disabled={loading}>
+                {loading ? 'Signing in...' : 'Sign in'}
+              </Button>
+            </form>
+          ) : (
+            <div className="flex flex-col gap-4">
+              <Input
+                label="Email or phone"
+                type="text"
+                value={emailOrPhone}
+                onChange={(e) => setEmailOrPhone(e.target.value)}
+                placeholder="you@example.com or +91..."
+                disabled={otpSent}
+              />
+              {!otpSent ? (
+                <Button onClick={handleSendOtp} className="w-full" disabled={loading}>
+                  {loading ? 'Sending...' : 'Send OTP'}
+                </Button>
+              ) : (
+                <form onSubmit={handleOtpLogin} className="flex flex-col gap-4">
+                  <Input
+                    label="OTP"
+                    type="text"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    placeholder="Enter 6-digit OTP"
+                  />
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? 'Verifying...' : 'Verify & sign in'}
+                  </Button>
+                  <button
+                    type="button"
+                    onClick={() => setOtpSent(false)}
+                    className="text-sm text-primary-600 hover:text-primary-700 font-medium transition-soft"
+                  >
+                    Use different number
+                  </button>
+                </form>
+              )}
+            </div>
+          )}
+        </div>
+
+        <p className="mt-6 text-center text-sm text-neutral-500">
+          {"Don't have an account? "}
+          <Link to="/register" className="font-semibold text-primary-600 hover:text-primary-700 transition-soft">
+            Create account
           </Link>
         </p>
       </div>

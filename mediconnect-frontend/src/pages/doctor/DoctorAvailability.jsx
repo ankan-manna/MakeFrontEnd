@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import toast from 'react-hot-toast'
+import { Plus, Clock } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
-import { Card } from '../../components/ui/Card'
+import { Card, CardHeader } from '../../components/ui/Card'
+import { Badge } from '../../components/ui/Badge'
 import { Loader } from '../../components/ui/Loader'
 import { doctorApi } from '../../api/services'
 
@@ -61,34 +63,55 @@ export function DoctorAvailability() {
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Availability</h1>
+    <div className="flex flex-col gap-6">
+      <div>
+        <h1 className="text-2xl font-bold text-neutral-900">Availability</h1>
+        <p className="text-sm text-neutral-500 mt-1">Manage your time slots for appointments</p>
+      </div>
+
       <Card>
-        <div className="flex flex-wrap gap-2 items-end mb-4">
+        <CardHeader title="Your slots" subtitle="View and filter your availability" />
+        <div className="flex flex-wrap gap-3 items-end mb-6">
           <Input label="From" type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
           <Input label="To" type="date" value={to} onChange={(e) => setTo(e.target.value)} />
           <Button onClick={loadSlots} disabled={loading}>Load slots</Button>
         </div>
         {loading ? <Loader /> : (
-          <ul className="divide-y divide-gray-100">
-            {slots.length === 0 && <li className="py-4 text-gray-500">No slots in range. Add below.</li>}
+          <div className="divide-y divide-neutral-100">
+            {slots.length === 0 && (
+              <div className="py-8 text-center">
+                <div className="w-12 h-12 rounded-2xl bg-neutral-100 flex items-center justify-center mx-auto mb-3">
+                  <Clock className="w-6 h-6 text-neutral-300" />
+                </div>
+                <p className="text-sm text-neutral-500">No slots in this range. Add one below.</p>
+              </div>
+            )}
             {slots.map((s) => (
-              <li key={s.id} className="py-2 flex gap-4">
-                <span>{s.slotDate}</span>
-                <span>{s.startTime} – {s.endTime}</span>
-                <span className="text-gray-500">{s.status}</span>
-              </li>
+              <div key={s.id} className="py-3 flex items-center gap-4">
+                <div className="w-9 h-9 rounded-lg bg-primary-50 flex items-center justify-center shrink-0">
+                  <Clock className="w-4 h-4 text-primary-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-neutral-900">{s.slotDate}</p>
+                  <p className="text-xs text-neutral-500">{s.startTime} - {s.endTime}</p>
+                </div>
+                <Badge variant={s.status === 'AVAILABLE' ? 'success' : 'default'}>{s.status}</Badge>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </Card>
+
       <Card>
-        <h3 className="font-semibold mb-4">Add slot</h3>
+        <CardHeader title="Add new slot" subtitle="Create a new availability slot" />
         <form onSubmit={handleCreateSlot} className="flex flex-wrap gap-4 items-end">
           <Input label="Date" type="date" value={slotDate} onChange={(e) => setSlotDate(e.target.value)} required />
           <Input label="Start" type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
           <Input label="End" type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
-          <Button type="submit" disabled={creating}>{creating ? 'Adding...' : 'Add slot'}</Button>
+          <Button type="submit" disabled={creating}>
+            <Plus className="w-4 h-4" />
+            {creating ? 'Adding...' : 'Add slot'}
+          </Button>
         </form>
       </Card>
     </div>
