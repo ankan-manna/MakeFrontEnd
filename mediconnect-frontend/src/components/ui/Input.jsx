@@ -20,7 +20,7 @@ export function Input({
         className={`block w-full rounded-xl border px-4 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 bg-white shadow-sm transition-smooth focus-ring ${
           error
             ? 'border-red-400 focus:border-red-500 focus:ring-red-500/30'
-            : 'border-neutral-300 hover:border-neutral-400 focus:border-primary-500 focus:ring-primary-500/30'
+            : 'border-neutral-200 hover:border-neutral-300 focus:border-primary-500 focus:ring-primary-500/20 focus:bg-white'
         }`}
         {...props}
       />

@@ -25,14 +25,14 @@ export function DoctorDashboard() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold text-neutral-900">Dashboard</h1>
+        <h1 className="text-2xl font-extrabold text-neutral-900">Dashboard</h1>
         <p className="text-sm text-neutral-500 mt-1">Welcome back, Doctor</p>
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Card>
+        <Card className="group">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-primary-50">
+            <div className="p-3 rounded-xl bg-primary-50 transition-smooth group-hover:scale-110">
               <User className="w-5 h-5 text-primary-600" />
             </div>
             <div>
@@ -41,9 +41,9 @@ export function DoctorDashboard() {
             </div>
           </div>
         </Card>
-        <Card>
+        <Card className="group">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-emerald-50">
+            <div className="p-3 rounded-xl bg-emerald-50 transition-smooth group-hover:scale-110">
               <Calendar className="w-5 h-5 text-emerald-600" />
             </div>
             <div>
@@ -52,9 +52,9 @@ export function DoctorDashboard() {
             </div>
           </div>
         </Card>
-        <Card>
+        <Card className="group">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-amber-50">
+            <div className="p-3 rounded-xl bg-amber-50 transition-smooth group-hover:scale-110">
               <FileText className="w-5 h-5 text-amber-600" />
             </div>
             <div>
@@ -68,16 +68,16 @@ export function DoctorDashboard() {
       {profile && (
         <Card>
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-14 h-14 rounded-2xl bg-primary-100 flex items-center justify-center">
+            <div className="w-14 h-14 rounded-2xl bg-primary-100 flex items-center justify-center ring-4 ring-primary-50">
               <Stethoscope className="w-7 h-7 text-primary-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-neutral-900 text-lg">Your Profile</h3>
-              <p className="text-sm text-neutral-500">{profile.specialization} {profile.qualification && `\u00B7 ${profile.qualification}`}</p>
+              <h3 className="font-bold text-neutral-900 text-lg">{profile.specialization || 'Your Profile'}</h3>
+              <p className="text-sm text-neutral-500">{profile.qualification && profile.qualification}</p>
             </div>
           </div>
           {profile.consultationFee && (
-            <div className="inline-flex px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-medium">
+            <div className="inline-flex px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200/80 text-emerald-700 text-sm font-semibold">
               Fee: {profile.consultationFee}
             </div>
           )}

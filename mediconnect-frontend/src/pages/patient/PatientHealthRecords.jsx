@@ -27,7 +27,7 @@ export function PatientHealthRecords() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold text-neutral-900">Health Records</h1>
+        <h1 className="text-2xl font-extrabold text-neutral-900">Health Records</h1>
         <p className="text-sm text-neutral-500 mt-1">Your complete health timeline</p>
       </div>
 
@@ -38,8 +38,8 @@ export function PatientHealthRecords() {
             onClick={() => setFilter(t)}
             className={`px-4 py-2 rounded-xl text-sm font-semibold transition-smooth ${
               filter === t
-                ? 'bg-primary-600 text-white shadow-sm'
-                : 'bg-white text-neutral-600 border border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50'
+                ? 'bg-primary-600 text-white shadow-sm shadow-primary-500/20'
+                : 'bg-white text-neutral-600 border border-neutral-200/80 hover:border-neutral-300 hover:bg-neutral-50'
             }`}
           >
             {t}
@@ -53,13 +53,13 @@ export function PatientHealthRecords() {
             <div className="w-16 h-16 rounded-2xl bg-neutral-100 flex items-center justify-center mx-auto mb-4">
               <FileText className="w-8 h-8 text-neutral-300" />
             </div>
-            <p className="font-medium text-neutral-700 mb-1">No records to show</p>
+            <p className="font-semibold text-neutral-700 mb-1">No records to show</p>
             <p className="text-sm text-neutral-400">Timeline events appear after appointments and lab reports.</p>
           </div>
         ) : (
           <ul className="flex flex-col gap-3">
             {filtered.map((e) => (
-              <li key={e.id} className="flex gap-4 p-4 rounded-xl bg-neutral-50 border border-neutral-100">
+              <li key={e.id} className="flex gap-4 p-4 rounded-xl bg-neutral-50/80 border border-neutral-100 hover:bg-neutral-50 transition-soft">
                 <div className="shrink-0 w-1.5 rounded-full bg-primary-500 self-stretch" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
@@ -70,7 +70,7 @@ export function PatientHealthRecords() {
                         {e.eventDate ? new Date(e.eventDate).toLocaleString() : ''} {e.sourceService && `\u00B7 ${e.sourceService}`}
                       </p>
                     </div>
-                    <Badge variant="primary">{e.eventType}</Badge>
+                    <Badge variant="primary" size="sm">{e.eventType}</Badge>
                   </div>
                 </div>
               </li>
