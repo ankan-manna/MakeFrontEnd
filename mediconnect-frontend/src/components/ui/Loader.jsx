@@ -3,8 +3,8 @@ export function Loader({ size = 'md', className = '' }) {
   return (
     <div className={`flex items-center justify-center ${className}`}>
       <div className={`${sizes[size]} relative`}>
-        <div className={`absolute inset-0 rounded-full border-2 border-primary-100`} />
-        <div className={`absolute inset-0 rounded-full border-2 border-transparent border-t-primary-600 animate-spin`} />
+        <div className="absolute inset-0 rounded-full border-2 border-primary-100" />
+        <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-primary-600 animate-spin" />
       </div>
     </div>
   )
@@ -12,8 +12,12 @@ export function Loader({ size = 'md', className = '' }) {
 
 export function PageLoader() {
   return (
-    <div className="min-h-[50vh] flex flex-col items-center justify-center gap-3">
-      <Loader size="lg" />
+    <div className="min-h-[50vh] flex flex-col items-center justify-center gap-4">
+      <div className="relative">
+        <div className="w-14 h-14 rounded-2xl bg-primary-50 flex items-center justify-center animate-pulse-soft">
+          <Loader size="lg" />
+        </div>
+      </div>
       <p className="text-sm text-neutral-400 animate-pulse-soft">Loading...</p>
     </div>
   )

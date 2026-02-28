@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Stethoscope, Menu, X } from 'lucide-react'
+import { Stethoscope, Menu, X, ArrowRight } from 'lucide-react'
 import { Button } from '../ui/Button'
 
 export function PublicNavbar() {
@@ -22,17 +22,17 @@ export function PublicNavbar() {
     <nav
       className={`sticky top-0 z-40 transition-smooth ${
         scrolled
-          ? 'bg-white/80 backdrop-blur-xl border-b border-neutral-200/60 shadow-soft'
-          : 'bg-transparent border-b border-transparent'
+          ? 'bg-white/90 backdrop-blur-xl border-b border-neutral-200/60 shadow-soft'
+          : 'bg-white/50 backdrop-blur-sm border-b border-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <Link to="/" className="flex items-center gap-2.5 text-neutral-900 font-bold text-lg group">
-            <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center group-hover:bg-primary-700 transition-smooth">
+            <div className="w-9 h-9 rounded-xl bg-primary-600 flex items-center justify-center group-hover:bg-primary-700 transition-smooth shadow-sm shadow-primary-500/20">
               <Stethoscope className="w-5 h-5 text-white" />
             </div>
-            MediConnect
+            <span className="tracking-tight">MediConnect</span>
           </Link>
 
           {/* Desktop */}
@@ -41,7 +41,10 @@ export function PublicNavbar() {
               <Button variant="ghost" size="sm">Sign in</Button>
             </Link>
             <Link to="/register">
-              <Button size="sm">Get started</Button>
+              <Button size="sm" variant="primary-gradient">
+                Get started
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
             </Link>
           </div>
 
@@ -65,7 +68,10 @@ export function PublicNavbar() {
               <Button variant="ghost" className="w-full justify-center">Sign in</Button>
             </Link>
             <Link to="/register">
-              <Button className="w-full justify-center">Get started</Button>
+              <Button variant="primary-gradient" className="w-full justify-center">
+                Get started
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
             </Link>
           </div>
         </div>

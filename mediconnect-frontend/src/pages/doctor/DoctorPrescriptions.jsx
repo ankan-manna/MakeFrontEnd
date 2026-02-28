@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import toast from 'react-hot-toast'
-import { Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2, Send } from 'lucide-react'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Card, CardHeader } from '../../components/ui/Card'
@@ -56,7 +56,7 @@ export function DoctorPrescriptions() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold text-neutral-900">Create Prescription</h1>
+        <h1 className="text-2xl font-extrabold text-neutral-900">Create Prescription</h1>
         <p className="text-sm text-neutral-500 mt-1">Write and send prescriptions to the pharmacy</p>
       </div>
       <Card>
@@ -78,7 +78,7 @@ export function DoctorPrescriptions() {
             </div>
             <div className="flex flex-col gap-3">
               {items.map((item, i) => (
-                <div key={i} className="p-4 rounded-xl bg-neutral-50 border border-neutral-100">
+                <div key={i} className="p-4 rounded-xl bg-neutral-50/80 border border-neutral-100">
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                     <Input placeholder="Name" value={item.medicineName} onChange={(e) => updateItem(i, 'medicineName', e.target.value)} />
                     <Input placeholder="Dosage" value={item.dosage} onChange={(e) => updateItem(i, 'dosage', e.target.value)} />
@@ -90,7 +90,7 @@ export function DoctorPrescriptions() {
                         <button
                           type="button"
                           onClick={() => removeItem(i)}
-                          className="p-2.5 rounded-xl hover:bg-red-50 text-neutral-400 hover:text-red-500 transition-soft self-end"
+                          className="p-2.5 rounded-xl hover:bg-red-50 text-neutral-400 hover:text-red-500 transition-soft self-end border border-transparent hover:border-red-200/60"
                           aria-label="Remove medicine"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -103,7 +103,8 @@ export function DoctorPrescriptions() {
             </div>
           </div>
 
-          <Button type="submit" disabled={loading} className="self-start mt-2">
+          <Button type="submit" variant="primary-gradient" disabled={loading} className="self-start mt-2">
+            <Send className="w-4 h-4" />
             {loading ? 'Creating...' : 'Create prescription'}
           </Button>
         </form>
