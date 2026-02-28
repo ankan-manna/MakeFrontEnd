@@ -1,0 +1,14 @@
+{
+  "name": "mediconnect",
+  "private": true,
+  "scripts": {
+    "dev": "cd mediconnect-frontend && npm run dev",
+    "build": "cd mediconnect-frontend && npm run build",
+    "preview": "cd mediconnect-frontend && npm run preview",
+    "install:app": "cd mediconnect-frontend && npm install"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^5.1.4",
+    "vite": "^7.3.1"
+  }
+}
